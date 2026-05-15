@@ -2,7 +2,7 @@ import { ReactNode, CSSProperties } from 'react'
 
 interface ButtonProps {
   children: ReactNode
-  onClick?: () => void
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | (() => void | Promise<void>)
   variant?: 'primary' | 'secondary' | 'danger' | 'success'
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'

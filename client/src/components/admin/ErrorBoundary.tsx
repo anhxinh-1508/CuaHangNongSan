@@ -81,7 +81,7 @@ export default class ErrorBoundary extends Component<Props, State> {
           }}>
             Rất tiếc, đã xảy ra lỗi không mong muốn. Vui lòng thử lại hoặc liên hệ với quản trị viên nếu lỗi vẫn tiếp diễn.
           </p>
-          {process.env.NODE_ENV === 'development' && this.state.error && (
+          {import.meta.env.DEV && this.state.error && (
             <div style={{
               marginBottom: 24,
               padding: 16,

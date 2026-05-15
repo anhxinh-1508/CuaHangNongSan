@@ -190,8 +190,8 @@ export default function AdminProducts() {
     return uploaded
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault()
     setUploading(true)
     
     try {

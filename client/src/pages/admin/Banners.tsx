@@ -127,8 +127,8 @@ export default function AdminBanners() {
     return unwrapData<any>(res.data, {})
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault()
     setUploading(true)
     
     try {
