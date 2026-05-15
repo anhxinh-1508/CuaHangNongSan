@@ -1,0 +1,21 @@
+:root {
+  --brand-green: #3d5c30;
+  --brand-green-2: #4d7339;
+  --brand-gold: #e3a127;
+  --brand-gold-soft: #fff8e8;
+
+  --text-primary: #1f2937;
+  --text-secondary: #737373;
+  --surface: #ffffff;
+  --surface-soft: #f7faf6;
+  --border-soft: #e7e5e4;
+  --border-brand: #d7e4d1;
+
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-brand: 0 4px 12px rgba(60, 92, 45, 0.3);
+}

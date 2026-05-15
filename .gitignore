@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+client/node_modules/
+
+# Build outputs
+dist/
+client/dist/
+backend/**/bin/
+backend/**/obj/
+
+# Environment & secrets - KHÔNG PUSH LÊN GIT
+.env
+.env.local
+.env.*.local
+backend/**/.env
+backend/**/appsettings.Development.json
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Markdown — không đưa lên Git (gồm README)
+*.md

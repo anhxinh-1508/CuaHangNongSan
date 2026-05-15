@@ -1,0 +1,79 @@
+/* FreshFarm Organic - Design System */
+:root {
+  --primary: #3C5C2D;
+  --primary-dark: #2d4421;
+  --primary-light: #4d7339;
+  --secondary: #E2A227;
+  --secondary-dark: #c78a1f;
+  --secondary-light: #f0b844;
+  --text: #1a1a1a;
+  --text-muted: #737373;
+  --bg: #ffffff;
+  --bg-alt: #fafaf9;
+  --bg-accent: #fffbf0;
+  --border: #e7e5e4;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+  --radius-sm: 6px;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  :root {
+    --radius: 10px;
+    --radius-sm: 5px;
+  }
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}

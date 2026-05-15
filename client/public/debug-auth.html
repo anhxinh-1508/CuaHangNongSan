@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Auth - FreshFarm Organic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #3C5C2D;
+      margin-bottom: 20px;
+    }
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-left: 4px solid #3C5C2D;
+    }
+    .section h2 {
+      color: #3C5C2D;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    .info-row {
+      display: flex;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .info-label {
+      font-weight: 600;
+      width: 150px;
+      color: #666;
+    }
+    .info-value {
+      flex: 1;
+      color: #333;
+      word-break: break-all;
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .status-success {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .status-error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .status-warning {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+    button {
+      background: #3C5C2D;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: #2d4421;
+    }
+    button.secondary {
+      background: #dc2626;
+    }
+    button.secondary:hover {
+      background: #991b1b;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Debug Authentication & Authorization</h1>
+    <div id="login-hint" style="display:none; margin-bottom: 20px; padding: 16px 18px; background: #fffbeb; border: 2px solid #f59e0b; border-radius: 10px; font-size: 14px; line-height: 1.6; color: #78350f;"></div>
+    
+    <div class="section">
+      <h2>📦 LocalStorage Status</h2>
+      <div id="localStorage-info"></div>
+      <button onclick="refreshLocalStorage()">Refresh</button>
+      <button class="secondary" onclick="clearAuth()">Clear Auth Data</button>
+    </div>
+
+    <div class="section">
+      <h2>👤 Current User Info</h2>
+      <div id="user-info"></div>
+    </div>
+
+    <div class="section">
+      <h2>🔑 JWT Token Analysis</h2>
+      <div id="token-analysis"></div>
+    </div>
+
+    <div class="section">
+      <h2>🧪 API Test</h2>
+      <p style="margin-bottom: 12px; font-size: 13px; color: #666;">Chỉ gọi được khi đã <strong>đăng nhập trên cùng địa chỉ</strong> (vd: nếu app chạy <code>http://localhost:5174</code> thì phải login trên port đó — mỗi port có <code>localStorage</code> riêng).</p>
+      <button onclick="testDashboard()">Test GET /admin/dashboard</button>
+      <button onclick="testProducts()">Test GET /admin/products</button>
+      <button onclick="testMe()">Test GET /users/me</button>
+      <div id="api-test-result"></div>
+    </div>
+
+    <div class="section">
+      <h2>📝 Console Logs</h2>
+      <div id="console-logs"></div>
+    </div>
+  </div>
+
+  <script>
+    let logs = [];
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString('vi-VN');
+      logs.push({ timestamp, message, type });
+      updateConsoleLogs();
+      console.log(`[${type.toUpperCase()}]`, message);
+    }
+
+    function updateConsoleLogs() {
+      const container = document.getElementById('console-logs');
+      container.innerHTML = logs.slice(-10).reverse().map(l => 
+        `<div style="margin-bottom: 8px; font-size: 13px;">
+          <span style="color: #888;">[${l.timestamp}]</span>
+          <span style="color: ${l.type === 'error' ? '#dc2626' : l.type === 'success' ? '#16a34a' : l.type === 'warn' ? '#d97706' : '#3C5C2D'}; font-weight: 600;">
+            ${l.type.toUpperCase()}
+          </span>: ${l.message}
+        </div>`
+      ).join('');
+    }
+
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function refreshLocalStorage() {
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
+      
+      let html = '';
+      
+      html += `<div class="info-row">
+        <div class="info-label">Token:</div>
+        <div class="info-value">
+          ${token ? 
+            `<span class="status status-success">✓ Có token</span> (${token.length} chars)` : 
+            '<span class="status status-error">✗ Không có token</span>'
+          }
+        </div>
+      </div>`;
+
+      html += `<div class="info-row">
+        <div class="info-label">User Data:</div>
+        <div class="info-value">
+          ${user ? 
+            '<span class="status status-success">✓ Có dữ liệu user</span>' : 
+            '<span class="status status-error">✗ Không có dữ liệu user</span>'
+          }
+        </div>
+      </div>`;
+
+      if (token) {
+        html += `<pre>${token}</pre>`;
+      }
+
+      document.getElementById('localStorage-info').innerHTML = html;
+      log('Refreshed localStorage status', 'info');
+      
+      const hint = document.getElementById('login-hint');
+      if (!token) {
+        hint.style.display = 'block';
+        hint.innerHTML =
+          '<strong>Chưa có token.</strong> Trang này chỉ đọc <code>localStorage</code> giống app React.<br>' +
+          '→ Mở <a href="/login" style="color: #b45309; font-weight: 700;">/login</a> trên <strong>cùng URL</strong> (cùng port) rồi đăng nhập Admin. Sau đó F5 lại trang này.<br>' +
+          '<small>Nếu bạn login ở port 5173 mà mở debug ở 5174 — sẽ không thấy token (mỗi port là kho lưu riêng).</small>';
+      } else {
+        hint.style.display = 'none';
+        hint.innerHTML = '';
+      }
+      
+      // Also update user info
+      updateUserInfo();
+      analyzeToken();
+    }
+
+    function updateUserInfo() {
+      const user = localStorage.getItem('user');
+      let html = '';
+
+      if (user) {
+        try {
+          const userData = JSON.parse(user);
+          html += `<div class="info-row">
+            <div class="info-label">ID:</div>
+            <div class="info-value">${userData.id || 'N/A'}</div>
+          </div>`;
+          html += `<div class="info-row">
+            <div class="info-label">Email:</div>
+            <div class="info-value">${userData.email || 'N/A'}</div>
+          </div>`;
+          html += `<div class="info-row">
+            <div class="info-label">Name:</div>
+            <div class="info-value">${userData.name || 'N/A'}</div>
+          </div>`;
+          html += `<div class="info-row">
+            <div class="info-label">Role:</div>
+            <div class="info-value">
+              <span class="status ${userData.role === 'Admin' ? 'status-success' : 'status-warning'}">
+                ${userData.role || 'N/A'}
+              </span>
+            </div>
+          </div>`;
+          html += `<pre>${JSON.stringify(userData, null, 2)}</pre>`;
+        } catch (e) {
+          html = '<span class="status status-error">Invalid JSON in localStorage</span>';
+          log('Invalid user JSON in localStorage', 'error');
+        }
+      } else {
+        html = '<span class="status status-error">No user data</span>';
+      }
+
+      document.getElementById('user-info').innerHTML = html;
+    }
+
+    function analyzeToken() {
+      const token = localStorage.getItem('token');
+      let html = '';
+
+      if (token) {
+        const decoded = parseJwt(token);
+        if (decoded) {
+          const now = Math.floor(Date.now() / 1000);
+          const isExpired = decoded.exp < now;
+          const timeLeft = decoded.exp - now;
+          
+          html += `<div class="info-row">
+            <div class="info-label">Issued At:</div>
+            <div class="info-value">${new Date(decoded.iat * 1000).toLocaleString('vi-VN')}</div>
+          </div>`;
+          html += `<div class="info-row">
+            <div class="info-label">Expires At:</div>
+            <div class="info-value">${new Date(decoded.exp * 1000).toLocaleString('vi-VN')}</div>
+          </div>`;
+          html += `<div class="info-row">
+            <div class="info-label">Status:</div>
+            <div class="info-value">
+              <span class="status ${isExpired ? 'status-error' : 'status-success'}">
+                ${isExpired ? '✗ ĐÃ HẾT HẠN' : '✓ Còn hiệu lực'}
+              </span>
+            </div>
+          </div>`;
+          if (!isExpired) {
+            html += `<div class="info-row">
+              <div class="info-label">Time Left:</div>
+              <div class="info-value">${Math.floor(timeLeft / 60)} phút ${timeLeft % 60} giây</div>
+            </div>`;
+          }
+          html += `<div class="info-row">
+            <div class="info-label">User ID:</div>
+            <div class="info-value">${decoded.userId || 'N/A'}</div>
+          </div>`;
+          html += `<pre>${JSON.stringify(decoded, null, 2)}</pre>`;
+          
+          if (isExpired) {
+            log('Token đã hết hạn!', 'error');
+          }
+        } else {
+          html = '<span class="status status-error">Cannot decode JWT</span>';
+          log('Cannot decode JWT token', 'error');
+        }
+      } else {
+        html = '<span class="status status-error">No token to analyze</span>';
+      }
+
+      document.getElementById('token-analysis').innerHTML = html;
+    }
+
+    function clearAuth() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      log('Cleared auth data', 'info');
+      refreshLocalStorage();
+    }
+
+    async function testApi(url, label) {
+      const resultDiv = document.getElementById('api-test-result');
+      resultDiv.innerHTML = '<p style="color: #3C5C2D;">Testing...</p>';
+      log(`Testing ${label}...`, 'info');
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        resultDiv.innerHTML =
+          '<p class="status status-warning" style="display:block; padding:12px;">Chưa có token — không thể test API.</p>' +
+          '<p style="margin-top:10px; font-size:14px;">Đăng nhập tại <a href="/login">/login</a> (cùng host/port), rồi F5 trang này.</p>';
+        log('Chưa có token — hãy đăng nhập trên cùng URL (cùng port) trước khi test API', 'warn');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/v1${url}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+        
+        let html = `<h3 style="margin-top: 15px;">Response from ${label}</h3>`;
+        html += `<div class="info-row">
+          <div class="info-label">Status:</div>
+          <div class="info-value">
+            <span class="status ${response.ok ? 'status-success' : 'status-error'}">
+              ${response.status} ${response.statusText}
+            </span>
+          </div>
+        </div>`;
+        html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        
+        resultDiv.innerHTML = html;
+        
+        if (response.ok) {
+          log(`${label} - SUCCESS`, 'success');
+        } else {
+          log(`${label} - FAILED: ${data.message || response.statusText}`, 'error');
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<p class="status status-error">Error: ${error.message}</p>`;
+        log(`${label} - ERROR: ${error.message}`, 'error');
+      }
+    }
+
+    function testDashboard() {
+      testApi('/admin/dashboard', 'GET /admin/dashboard');
+    }
+
+    function testProducts() {
+      testApi('/admin/products', 'GET /admin/products');
+    }
+
+    function testMe() {
+      testApi('/users/me', 'GET /users/me');
+    }
+
+    // Auto refresh on load
+    refreshLocalStorage();
+    
+    // Auto refresh every 10 seconds
+    setInterval(() => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        analyzeToken();
+      }
+    }, 10000);
+  </script>
+</body>
+</html>

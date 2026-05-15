@@ -1,0 +1,91 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+  <diagram id="bpmn2" name="Xử lý đơn">
+    <mxGraphModel dx="1426" dy="777" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pool" parent="1" style="swimlane;startSize=30;horizontal=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1" value="Quy trình xử lý đơn" vertex="1">
+          <mxGeometry height="560" width="1240" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_system" parent="pool" style="swimlane;startSize=30;horizontal=0;fillColor=#f0fff0;strokeColor=#82b366;fontSize=12;fontStyle=1" value="Hệ thống" vertex="1">
+          <mxGeometry height="240" width="1240" as="geometry" />
+        </mxCell>
+        <mxCell id="start_msg" parent="lane_system" style="shape=bpmn.startEvent;whiteSpace=wrap;fontSize=11" value="Nhận thông báo đơn mới" vertex="1">
+          <mxGeometry height="36" width="36" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="task_create" parent="lane_system" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Tạo / nhận đơn (tự động)" vertex="1">
+          <mxGeometry height="60" width="180" x="120" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_to_admin" parent="lane_system" style="shape=bpmn.intermediateThrowEvent;whiteSpace=wrap;fontSize=11" value="Gửi thông báo đến Admin" vertex="1">
+          <mxGeometry height="36" width="36" x="340" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="f1" edge="1" parent="lane_system" source="start_msg" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_create">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_admin" parent="pool" style="swimlane;startSize=30;horizontal=0;fillColor=#f2f9ff;strokeColor=#6c8ebf;fontSize=12;fontStyle=1" value="Quản trị viên" vertex="1">
+          <mxGeometry height="320" width="1240" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_receive" parent="lane_admin" style="shape=bpmn.intermediateCatchEvent;whiteSpace=wrap;fontSize=11" value="Nhận thông báo (Admin)" vertex="1">
+          <mxGeometry height="36" width="36" x="40" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="task_list" parent="lane_admin" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Xem danh sách đơn" vertex="1">
+          <mxGeometry height="60" width="160" x="120" y="306" as="geometry" />
+        </mxCell>
+        <mxCell id="task_open" parent="lane_admin" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Mở chi tiết đơn" vertex="1">
+          <mxGeometry height="60" width="140" x="300" y="306" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_admin" parent="lane_admin" style="shape=bpmn.exclusiveGateway;whiteSpace=wrap;fontSize=11" value="Đủ điều kiện?" vertex="1">
+          <mxGeometry height="48" width="48" x="460" y="306" as="geometry" />
+        </mxCell>
+        <mxCell id="task_confirm" parent="lane_admin" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Xác nhận đơn → Đang xử lý" vertex="1">
+          <mxGeometry height="60" width="160" x="540" y="286" as="geometry" />
+        </mxCell>
+        <mxCell id="task_cancel" parent="lane_admin" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Hủy đơn" vertex="1">
+          <mxGeometry height="60" width="140" x="540" y="366" as="geometry" />
+        </mxCell>
+        <mxCell id="task_pack" parent="lane_admin" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Chuẩn bị hàng" vertex="1">
+          <mxGeometry height="60" width="140" x="740" y="286" as="geometry" />
+        </mxCell>
+        <mxCell id="task_update_shipping" parent="lane_admin" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Cập nhật: Đang giao" vertex="1">
+          <mxGeometry height="60" width="160" x="920" y="286" as="geometry" />
+        </mxCell>
+        <mxCell id="task_complete" parent="lane_admin" style="shape=bpmn.task;whiteSpace=wrap;fontSize=11" value="Cập nhật: Hoàn tất" vertex="1">
+          <mxGeometry height="60" width="140" x="1120" y="286" as="geometry" />
+        </mxCell>
+        <mxCell id="end_complete" parent="lane_admin" style="shape=bpmn.endEvent;whiteSpace=wrap;fontSize=11" value="Đơn hoàn tất" vertex="1">
+          <mxGeometry height="36" width="36" x="1280" y="306" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" edge="1" parent="lane_admin" source="admin_receive" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_list">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f4" edge="1" parent="lane_admin" source="task_list" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_open">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f5" edge="1" parent="lane_admin" source="task_open" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="gw_admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f6" edge="1" parent="lane_admin" source="gw_admin" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_confirm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f7" edge="1" parent="lane_admin" source="gw_admin" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f8" edge="1" parent="lane_admin" source="task_confirm" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_pack">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f9" edge="1" parent="lane_admin" source="task_pack" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_update_shipping">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f10" edge="1" parent="lane_admin" source="task_update_shipping" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="task_complete">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f11" edge="1" parent="lane_admin" source="task_complete" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" target="end_complete">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" edge="1" parent="pool" source="msg_to_admin" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;html=1;" target="admin_receive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

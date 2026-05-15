@@ -1,0 +1,108 @@
+.auth-card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--border-soft);
+  box-shadow: var(--shadow-sm);
+  padding: 48px;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-icon-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 16px;
+}
+
+.auth-title {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--brand-green);
+}
+
+.auth-subtitle {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.btn-brand {
+  padding: 14px 24px;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-brand-green {
+  background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-2) 100%);
+  box-shadow: var(--shadow-brand);
+}
+
+.btn-brand-gold {
+  background: linear-gradient(135deg, var(--brand-gold) 0%, #f0b844 100%);
+  box-shadow: 0 4px 12px rgba(227, 161, 39, 0.3);
+}
+
+.input-brand {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-soft);
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.header-brand {
+  background: #fff;
+  border-bottom: 2px solid var(--brand-gold);
+  box-shadow: 0 4px 12px rgba(61, 92, 48, 0.08);
+}
+
+.footer-brand {
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  border-top: 3px solid var(--brand-gold);
+}
+
+.surface-card {
+  background: #fff;
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.section-title {
+  margin: 0 0 8px;
+  color: var(--brand-green);
+  font-weight: 700;
+}
+
+.status-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin: 0;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 28px 22px;
+  }
+}
