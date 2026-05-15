@@ -1,0 +1,91 @@
+# Render Blueprint — Cửa hàng nông sản (API + Static Site)
+# Tài liệu: https://render.com/docs/blueprint-spec
+# Kiểm tra: render blueprints validate render.yaml (Render CLI)
+#
+# Trước khi apply: tạo MongoDB Atlas, đổi tên service nếu cần (giữ đồng bộ 3 chỗ dưới).
+# Tên service mặc định:
+#   - API:  cuanhangnongsan-api   → https://cuanhangnongsan-api.onrender.com
+#   - Web:  cuanhangnongsan-web   → https://cuanhangnongsan-web.onrender.com
+#
+# Nếu đổi `name` của API: sửa destination trong routes của static + CLIENT_URL vẫn trỏ tới web.
+
+services:
+  # ─── Backend API (Node / Express) ─────────────────────────────────────────
+  - type: web
+    name: cuanhangnongsan-api
+    runtime: node
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/v1/health
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - server/**
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Atlas — Render sẽ hỏi khi tạo Blueprint lần đầu (sync: false)
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      # Phải trùng URL Static Site (tên service web bên dưới)
+      - key: CLIENT_URL
+        value: https://cuanhangnongsan-web.onrender.com
+      - key: ALLOW_GUEST_CHECKOUT
+        value: "true"
+      # Cloudinary — nhập trên Dashboard khi tạo
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      # Mailjet (khuyến nghị production)
+      - key: MAILJET_API_KEY
+        sync: false
+      - key: MAILJET_SECRET_KEY
+        sync: false
+      - key: MAILJET_SENDER_EMAIL
+        sync: false
+      - key: MAILJET_SENDER_NAME
+        value: FreshFarm Organic
+      # Chatbot — mặc định mock; bật OpenAI thì thêm AI_API_KEY trên Dashboard
+      - key: AI_PROVIDER
+        value: mock
+      - key: AI_MODEL
+        value: gpt-4o-mini
+      - key: AI_API_KEY
+        sync: false
+
+  # ─── Frontend (Vite / React — static) ───────────────────────────────────
+  - type: web
+    name: cuanhangnongsan-web
+    runtime: static
+    branch: main
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - client/**
+    routes:
+      # Proxy API (khớp tên service API ở trên)
+      - type: rewrite
+        source: /api/*
+        destination: https://cuanhangnongsan-api.onrender.com/api/*
+      # SPA — React Router
+      - type: rewrite
+        source: /*
+        destination: /index.html
