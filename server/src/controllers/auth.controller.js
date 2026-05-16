@@ -92,11 +92,13 @@ exports.resendVerifyOtp = asyncHandler(async (req, res) => {
 exports.verifyOtp = asyncHandler(async (req, res) => {
   const name = cleanText(req.body.name);
   const email = cleanText(req.body.email)?.toLowerCase();
-  const otp = cleanText(req.body.otp);
+  const otp = String(cleanText(req.body.otp) || "").replace(/\D/g, "");
   const password = req.body.password;
 
   if (!name || !email || !otp || !password)
     throw new AppError("VALIDATION_ERROR", "Vui lòng nhập đủ họ tên, email, mã OTP và mật khẩu", 422);
+  if (otp.length !== 6)
+    throw new AppError("VALIDATION_ERROR", "Mã OTP phải đúng 6 chữ số", 422);
 
   const row = await OtpVerification.findOne({
     email,

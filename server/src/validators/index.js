@@ -11,7 +11,7 @@ const passwordRule = body("password")
 const nameRule = body("name").trim().isLength({ min: 2, max: 80 }).withMessage("Họ tên 2–80 ký tự");
 const otpRule = body("otp").trim().matches(/^\d{6}$/).withMessage("OTP phải đúng 6 chữ số");
 
-const registerValidator = [nameRule, emailRule, passwordRule];
+const registerValidator = [emailRule];
 const resendVerifyOtpValidator = [emailRule];
 const loginValidator = [emailRule, body("password").notEmpty().withMessage("Vui lòng nhập mật khẩu")];
 /** Xác thực đăng ký: cần email + OTP + họ tên + mật khẩu (gửi lại, không lưu tạm trên server) */

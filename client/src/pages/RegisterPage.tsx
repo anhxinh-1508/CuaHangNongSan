@@ -4,7 +4,7 @@ import { FiAlertCircle, FiCheckCircle, FiClock, FiHash, FiLock, FiMail, FiPhone,
 import { useAuth } from '../features/auth/context/AuthContext'
 
 export default function RegisterPage() {
-  const { register, sendOtp, verifyOtp } = useAuth()
+  const { register, verifyOtp } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState<'form' | 'otp'>('form')
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '' })
@@ -22,9 +22,7 @@ export default function RegisterPage() {
         setError(registerErr)
         return
       }
-      const err = await sendOtp(form.email, 'Register')
-      if (err) setError(err)
-      else setStep('otp')
+      setStep('otp')
     } catch {
       setError('Đã có lỗi xảy ra')
     } finally {
@@ -88,7 +86,7 @@ export default function RegisterPage() {
               type="text"
               placeholder="000000"
               value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
               required
               maxLength={6}
               style={{ 
