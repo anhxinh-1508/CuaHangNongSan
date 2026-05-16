@@ -29,5 +29,8 @@ Thumbs.db
 *.log
 logs/
 
+# Tài liệu / sơ đồ (BPMN, PlantUML, draw.io) — không đưa lên Git
+docs/
+
 # Markdown — không đưa lên Git (gồm README)
 *.md
