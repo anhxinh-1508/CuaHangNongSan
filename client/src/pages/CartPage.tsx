@@ -227,28 +227,29 @@ export default function CartPage() {
               key={i.productId}
               style={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                padding: 20,
+                alignItems: isMobile ? 'flex-start' : 'center',
+                gap: isMobile ? 12 : 16,
+                padding: isMobile ? 14 : 20,
                 background: '#fff',
                 border: '2px solid #e7e5e4',
                 borderRadius: 16,
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
                 transition: 'all 0.2s',
                 opacity: selectedIds.has(i.productId) ? 1 : 0.72,
+                flexWrap: isMobile ? 'wrap' : 'nowrap',
               }}
             >
               <input
                 type="checkbox"
                 checked={selectedIds.has(i.productId)}
                 onChange={() => toggleSelect(i.productId)}
-                style={{ width: 22, height: 22, accentColor: '#3C5C2D', cursor: 'pointer', flexShrink: 0 }}
+                style={{ width: 20, height: 20, accentColor: '#3C5C2D', cursor: 'pointer', flexShrink: 0, marginTop: isMobile ? 4 : 0 }}
                 aria-label={`Chọn ${i.productName}`}
               />
               <div
                 style={{
-                  width: 100,
-                  height: 100,
+                  width: isMobile ? 80 : 100,
+                  height: isMobile ? 80 : 100,
                   background: 'linear-gradient(135deg, #fffbf0 0%, #fff5e1 100%)',
                   borderRadius: 12,
                   border: '2px solid #E2A227',
@@ -259,7 +260,7 @@ export default function CartPage() {
                 {i.imageUrl ? (
                   <img src={i.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40 }}>
                     <FiShoppingBag />
                   </div>
                 )}
@@ -270,77 +271,82 @@ export default function CartPage() {
                   to={`/products/${i.productId}`}
                   style={{
                     fontWeight: 600,
-                    fontSize: 18,
+                    fontSize: isMobile ? 15 : 18,
                     color: '#1a1a1a',
                     textDecoration: 'none',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical' as const,
+                    overflow: 'hidden',
                   }}
                 >
                   {i.productName}
                 </Link>
-                <p style={{ margin: '8px 0 0', color: '#E2A227', fontWeight: 700, fontSize: 20 }}>
+                <p style={{ margin: '6px 0 0', color: '#E2A227', fontWeight: 700, fontSize: isMobile ? 16 : 20 }}>
                   {i.price?.toLocaleString()}đ
                 </p>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'space-between' : 'flex-end', gap: 10, flexShrink: 0, width: isMobile ? '100%' : 'auto', paddingLeft: isMobile ? 32 : 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={() => updateQty(i.productId, Math.max(1, i.quantity - 1))}
+                    style={{
+                      width: 34,
+                      height: 34,
+                      background: '#fff',
+                      border: '2px solid #3C5C2D',
+                      borderRadius: 8,
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: '#3C5C2D',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    −
+                  </button>
+                  <span style={{ minWidth: 32, textAlign: 'center', fontWeight: 700, fontSize: 16, color: '#3C5C2D' }}>
+                    {i.quantity}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => updateQty(i.productId, i.quantity + 1)}
+                    style={{
+                      width: 34,
+                      height: 34,
+                      background: '#fff',
+                      border: '2px solid #3C5C2D',
+                      borderRadius: 8,
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: '#3C5C2D',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
                 <button
                   type="button"
-                  onClick={() => updateQty(i.productId, Math.max(1, i.quantity - 1))}
+                  onClick={() => remove(i.productId)}
                   style={{
-                    width: 36,
-                    height: 36,
+                    padding: isMobile ? '6px 12px' : '8px 16px',
                     background: '#fff',
-                    border: '2px solid #3C5C2D',
-                    borderRadius: 8,
-                    fontSize: 18,
-                    fontWeight: 700,
-                    color: '#3C5C2D',
+                    color: '#dc2626',
+                    border: '2px solid #dc2626',
+                    borderRadius: 10,
                     cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: 13,
+                    flexShrink: 0,
                   }}
                 >
-                  −
-                </button>
-                <span style={{ minWidth: 40, textAlign: 'center', fontWeight: 700, fontSize: 18, color: '#3C5C2D' }}>
-                  {i.quantity}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => updateQty(i.productId, i.quantity + 1)}
-                  style={{
-                    width: 36,
-                    height: 36,
-                    background: '#fff',
-                    border: '2px solid #3C5C2D',
-                    borderRadius: 8,
-                    fontSize: 18,
-                    fontWeight: 700,
-                    color: '#3C5C2D',
-                    cursor: 'pointer',
-                  }}
-                >
-                  +
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <FiTrash2 /> Xóa
+                  </span>
                 </button>
               </div>
-
-              <button
-                type="button"
-                onClick={() => remove(i.productId)}
-                style={{
-                  padding: '8px 16px',
-                  background: '#fff',
-                  color: '#dc2626',
-                  border: '2px solid #dc2626',
-                  borderRadius: 10,
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: 14,
-                  flexShrink: 0,
-                }}
-              >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  <FiTrash2 /> Xóa
-                </span>
-              </button>
             </div>
           ))}
         </div>

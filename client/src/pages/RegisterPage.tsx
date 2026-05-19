@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiAlertCircle, FiCheckCircle, FiClock, FiHash, FiLock, FiMail, FiPhone, FiUserPlus } from 'react-icons/fi'
 import { useAuth } from '../features/auth/context/AuthContext'
+import { useResponsive } from '../hooks/useResponsive'
 
 export default function RegisterPage() {
   const { register, verifyOtp } = useAuth()
+  const { isMobile } = useResponsive()
   const navigate = useNavigate()
   const [step, setStep] = useState<'form' | 'otp'>('form')
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '' })
@@ -142,7 +144,7 @@ export default function RegisterPage() {
       </div>
       
       <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
           <div>
             <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: '#3C5C2D' }}>
               Họ *

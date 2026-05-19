@@ -8,7 +8,6 @@ import WishlistHeartButton from '../components/WishlistHeartButton'
 
 const BANNER_AUTO_MS = 5000
 const HOT_FETCH_LIMIT = 40
-const HOT_PER_SLIDE = 4
 const HOT_AUTO_MS = 3000
 
 function formatLocalYYYYMMDD(d: Date): string {
@@ -69,6 +68,8 @@ export default function HomePage() {
   const [hotPauseAuto, setHotPauseAuto] = useState(false)
   const { isMobile, isTablet } = useResponsive()
 
+  const hotPerSlide = isMobile ? 2 : isTablet ? 3 : 4
+
   const hotDateKey = useMemo(() => formatLocalYYYYMMDD(new Date()), [])
 
   const hotDailyOrdered = useMemo(
@@ -76,7 +77,7 @@ export default function HomePage() {
     [hotPoolProducts, hotDateKey]
   )
 
-  const hotPages = useMemo(() => chunkProducts(hotDailyOrdered, HOT_PER_SLIDE), [hotDailyOrdered])
+  const hotPages = useMemo(() => chunkProducts(hotDailyOrdered, hotPerSlide), [hotDailyOrdered, hotPerSlide])
 
   const nHotPages = hotPages.length
 
@@ -90,7 +91,7 @@ export default function HomePage() {
 
   useEffect(() => {
     setHotSlideIndex(0)
-  }, [nHotPages, hotDateKey])
+  }, [nHotPages, hotDateKey, hotPerSlide])
 
   useEffect(() => {
     if (nHotPages <= 1 || hotPauseAuto) return
@@ -434,7 +435,7 @@ export default function HomePage() {
                     <div
                       style={{
                         display: 'grid',
-                        gridTemplateColumns: `repeat(${HOT_PER_SLIDE}, minmax(0, 1fr))`,
+                        gridTemplateColumns: `repeat(${hotPerSlide}, minmax(0, 1fr))`,
                         gap: isMobile ? 8 : 16,
                         alignItems: 'stretch',
                       }}

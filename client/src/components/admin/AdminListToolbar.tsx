@@ -24,6 +24,7 @@ export default function AdminListToolbar({
 }: Props) {
   return (
     <div
+      className="admin-list-toolbar"
       style={{
         display: 'flex',
         flexWrap: 'wrap',
@@ -33,7 +34,7 @@ export default function AdminListToolbar({
         ...style,
       }}
     >
-      <div style={{ flex: '1 1 220px', minWidth: 200 }}>
+      <div className="admin-list-toolbar-search" style={{ flex: '1 1 220px', minWidth: 0 }}>
         <Input
           label={searchLabel}
           placeholder={searchPlaceholder}
@@ -43,7 +44,7 @@ export default function AdminListToolbar({
         />
       </div>
       {children}
-      <span style={{ fontSize: 13, color: 'var(--text-secondary)', paddingBottom: 10, whiteSpace: 'nowrap' }}>
+      <span className="admin-list-toolbar-count" style={{ fontSize: 13, color: 'var(--text-secondary)', paddingBottom: 10, width: '100%', boxSizing: 'border-box' }}>
         Hiển thị: {filteredCount} / {totalCount}
       </span>
     </div>

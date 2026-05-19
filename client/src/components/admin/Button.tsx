@@ -30,9 +30,12 @@ export default function Button({
     cursor: disabled ? 'not-allowed' : 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 8,
     transition: 'all 0.2s',
     opacity: disabled ? 0.5 : 1,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
     ...style
   }
 

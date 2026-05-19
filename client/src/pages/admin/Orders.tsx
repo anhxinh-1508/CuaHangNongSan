@@ -12,6 +12,7 @@ import Badge from '../../components/admin/Badge'
 import AdminListToolbar from '../../components/admin/AdminListToolbar'
 import AdminPagination from '../../components/admin/AdminPagination'
 import { defaultSortDirection, sortRows, textMatches, timeOrZero } from '../../utils/adminGridHelpers'
+import { formatOrderPayment } from '../../utils/orderDisplay'
 import { useAdminListPage } from '../../hooks/useAdminListPage'
 
 const ORDER_STATUSES = [
@@ -255,14 +256,14 @@ export default function AdminOrders() {
             options={[{ value: '', label: 'Tất cả' }, ...ORDER_STATUSES]}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            containerStyle={{ marginBottom: 0, minWidth: 200 }}
+            containerStyle={{ marginBottom: 0, minWidth: 0, width: '100%' }}
           />
           <Select
             label="Thanh toán"
             options={PAYMENT_FILTERS}
             value={filterPayment}
             onChange={(e) => setFilterPayment(e.target.value)}
-            containerStyle={{ marginBottom: 0, minWidth: 180 }}
+            containerStyle={{ marginBottom: 0, minWidth: 0, width: '100%' }}
           />
         </AdminListToolbar>
         <Table
@@ -297,7 +298,7 @@ export default function AdminOrders() {
       >
         {selectedOrder && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 24 }}>
+            <div className="admin-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 24 }}>
               <div>
                 <h3 style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 700, color: 'var(--brand-green)' }}>
                   Thông tin đơn hàng
@@ -305,7 +306,7 @@ export default function AdminOrders() {
                 <div style={{ fontSize: 14, lineHeight: 1.8 }}>
                   <p style={{ margin: '4px 0' }}><strong>Mã đơn:</strong> {selectedOrder.orderCode}</p>
                   <p style={{ margin: '4px 0' }}><strong>Trạng thái:</strong> {getStatusBadge(selectedOrder.status)}</p>
-                  <p style={{ margin: '4px 0' }}><strong>Thanh toán:</strong> {selectedOrder.paymentMethod}</p>
+                  <p style={{ margin: '4px 0' }}><strong>Thanh toán:</strong> {formatOrderPayment(selectedOrder.paymentMethod)}</p>
                   <p style={{ margin: '4px 0' }}><strong>Ngày đặt:</strong> {selectedOrder.createdAt ? new Date(selectedOrder.createdAt).toLocaleString('vi-VN') : '-'}</p>
                 </div>
               </div>
@@ -334,10 +335,8 @@ export default function AdminOrders() {
                 {selectedOrder.items.map((item, idx) => (
                   <div 
                     key={idx}
+                    className="admin-order-item-row"
                     style={{ 
-                      display: 'flex', 
-                      gap: 16, 
-                      padding: 16,
                       borderBottom: idx < selectedOrder.items.length - 1 ? '1px solid var(--border-soft)' : 'none'
                     }}
                   >
@@ -364,25 +363,25 @@ export default function AdminOrders() {
               </div>
             </div>
 
-            <div style={{ textAlign: 'right', fontSize: 15 }}>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 100, marginBottom: 8 }}>
+            <div style={{ fontSize: 15 }}>
+              <div className="admin-order-summary-row" style={{ display: 'flex', justifyContent: 'space-between', gap: 16, marginBottom: 8 }}>
                 <span>Tạm tính:</span>
                 <span style={{ fontWeight: 600 }}>{selectedOrder.subtotal.toLocaleString()}đ</span>
               </div>
               {selectedOrder.discount > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 100, marginBottom: 8, color: '#dc2626' }}>
+                <div className="admin-order-summary-row" style={{ display: 'flex', justifyContent: 'space-between', gap: 16, marginBottom: 8, color: '#dc2626' }}>
                   <span>Giảm giá:</span>
                   <span style={{ fontWeight: 600 }}>-{selectedOrder.discount.toLocaleString()}đ</span>
                 </div>
               )}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 100, marginBottom: 8 }}>
+              <div className="admin-order-summary-row" style={{ display: 'flex', justifyContent: 'space-between', gap: 16, marginBottom: 8 }}>
                 <span>Phí vận chuyển:</span>
                 <span style={{ fontWeight: 600 }}>{selectedOrder.shippingFee.toLocaleString()}đ</span>
               </div>
-              <div style={{ 
+              <div className="admin-order-summary-row" style={{ 
                 display: 'flex', 
-                justifyContent: 'flex-end', 
-                gap: 100,
+                justifyContent: 'space-between', 
+                gap: 16,
                 paddingTop: 12,
                 borderTop: '2px solid var(--border-soft)',
                 fontSize: 18

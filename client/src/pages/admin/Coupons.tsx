@@ -305,7 +305,7 @@ export default function AdminCoupons() {
             ]}
             value={filterActive}
             onChange={(e) => setFilterActive(e.target.value as 'all' | 'yes' | 'no')}
-            containerStyle={{ marginBottom: 0, minWidth: 180 }}
+            containerStyle={{ marginBottom: 0, minWidth: 0, width: '100%' }}
           />
         </AdminListToolbar>
         <Table
@@ -352,7 +352,7 @@ export default function AdminCoupons() {
             helperText="Chỉ sử dụng chữ cái, số và gạch dưới"
           />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="admin-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <Select
               label="Loại giảm giá"
               value={formData.discountType}
@@ -383,7 +383,7 @@ export default function AdminCoupons() {
             min="0"
           />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="admin-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <Input
               label="Ngày bắt đầu"
               type="date"
@@ -400,7 +400,7 @@ export default function AdminCoupons() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="admin-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <Input
               label="Tổng số lượt sử dụng"
               type="number"

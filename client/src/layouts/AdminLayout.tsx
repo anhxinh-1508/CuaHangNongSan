@@ -47,26 +47,40 @@ export default function AdminLayout() {
   if (!user) return <Navigate to="/login" replace />
   if (!isAdmin) return <Navigate to="/" replace />
 
-  const sidebarStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: 280,
+  const sidebarBase: React.CSSProperties = {
     background: 'linear-gradient(180deg, #3C5C2D 0%, #2d4421 100%)',
     color: '#fff',
     padding: 24,
     boxShadow: '4px 0 12px rgba(0, 0, 0, 0.1)',
+  }
+
+  /** Desktop: cột cố định 280px, sticky — không dùng style drawer mobile */
+  const desktopSidebarStyle: React.CSSProperties = {
+    ...sidebarBase,
+    width: 280,
+    minWidth: 280,
+    maxWidth: 280,
+    flexShrink: 0,
+    alignSelf: 'flex-start',
+    position: 'sticky',
+    top: 0,
+    height: '100vh',
+    overflowY: 'auto',
+    zIndex: 10,
+  }
+
+  /** Mobile: drawer trượt từ trái */
+  const mobileSidebarStyle: React.CSSProperties = {
+    ...sidebarBase,
+    width: 280,
+    maxWidth: '85vw',
     position: 'fixed',
     top: 0,
-    left: sidebarOpen ? 0 : -280,
+    left: sidebarOpen ? 0 : -320,
     height: '100vh',
     overflowY: 'auto',
     transition: 'left 0.3s ease',
-    zIndex: 1000
-  }
-
-  const desktopSidebarStyle: React.CSSProperties = {
-    ...sidebarStyle,
-    position: 'sticky',
-    left: 0
+    zIndex: 1000,
   }
 
   const logoutBtnStyle: React.CSSProperties = {
@@ -115,7 +129,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fafaf9' }}>
+    <div className="admin-layout-root" style={{ display: 'flex', minHeight: '100vh', background: '#fafaf9' }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -219,7 +233,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Sidebar - Mobile */}
-      <aside style={sidebarStyle} className="sidebar-mobile">
+      <aside style={mobileSidebarStyle} className="sidebar-mobile">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <div style={{ fontWeight: 700, fontSize: 18, color: '#E2A227' }}>Menu</div>
           <button
@@ -324,8 +338,8 @@ export default function AdminLayout() {
         </nav>
       </aside>
 
-      {/* Main content */}
-      <div style={{ flex: 1, minHeight: '100vh' }}>
+      {/* Main content — minWidth:0 để bảng không kéo tràn viewport (flex overflow) */}
+      <div className="admin-layout-main" style={{ flex: 1, minHeight: '100vh', minWidth: 0 }}>
         {/* Mobile header */}
         <div className="mobile-header" style={{
           display: 'none',
@@ -358,8 +372,10 @@ export default function AdminLayout() {
           <div style={{ width: 32 }}></div>
         </div>
 
-        <div style={{ padding: '32px 24px', background: '#fafaf9' }}>
-          <Outlet />
+        <div className="admin-main-content" style={{ padding: '32px 24px', background: '#fafaf9', boxSizing: 'border-box' }}>
+          <div className="admin-page-shell">
+            <Outlet />
+          </div>
         </div>
       </div>
 
@@ -377,10 +393,18 @@ export default function AdminLayout() {
           .mobile-overlay {
             display: block !important;
           }
+          .admin-main-content {
+            padding: 20px 16px !important;
+          }
         }
         @media (min-width: 1025px) {
           .sidebar-mobile {
             display: none !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .admin-main-content {
+            padding: 16px 12px !important;
           }
         }
       `}</style>

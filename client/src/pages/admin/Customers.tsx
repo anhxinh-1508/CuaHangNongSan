@@ -259,7 +259,7 @@ export default function AdminCustomers() {
             ]}
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            containerStyle={{ marginBottom: 0, minWidth: 160 }}
+            containerStyle={{ marginBottom: 0, minWidth: 0, width: '100%' }}
           />
           <Select
             label="Xác thực email"
@@ -270,7 +270,7 @@ export default function AdminCustomers() {
             ]}
             value={filterVerified}
             onChange={(e) => setFilterVerified(e.target.value as 'all' | 'yes' | 'no')}
-            containerStyle={{ marginBottom: 0, minWidth: 200 }}
+            containerStyle={{ marginBottom: 0, minWidth: 0, width: '100%' }}
           />
         </AdminListToolbar>
         <Table

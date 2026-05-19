@@ -375,7 +375,7 @@ export default function AdminBatches() {
           </>
         }
       >
-        <form onSubmit={handleSubmit}>
+        <form className="admin-modal-form" onSubmit={handleSubmit}>
           <Select
             label="Sản phẩm"
             value={formData.productId}
@@ -392,7 +392,7 @@ export default function AdminBatches() {
             placeholder="VD: LOT-2026-001"
           />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+          <div className="admin-form-row admin-form-row-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 16 }}>
             <Input
               label="Ngày thu hoạch"
               type="date"
@@ -416,7 +416,7 @@ export default function AdminBatches() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="admin-form-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 16 }}>
             <Input
               label="Số lượng tồn kho"
               type="number"

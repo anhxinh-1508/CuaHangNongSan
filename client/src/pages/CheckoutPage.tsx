@@ -130,7 +130,7 @@ export default function CheckoutPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const { isMobile } = useResponsive()
+  const { isMobile, isTablet } = useResponsive()
 
   const [lines, setLines] = useState<CheckoutLine[]>([])
   const [checkoutHydrated, setCheckoutHydrated] = useState(false)
@@ -454,7 +454,7 @@ export default function CheckoutPage() {
         Thanh toán
       </h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.1fr', gap: isMobile ? 24 : 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: (isMobile || isTablet) ? '1fr' : '1fr 1.1fr', gap: isMobile ? 24 : 32 }}>
         <div
           style={{
             background: '#fff',
@@ -762,9 +762,7 @@ export default function CheckoutPage() {
                     Giả lập
                   </span>
                 </div>
-                <p style={{ margin: 0, fontSize: 13, color: '#737373', lineHeight: 1.45 }}>
-                  Hiển thị mã QR chuyển khoản; sau khi quét và chuyển (hoặc thử nghiệm), nhấn xác nhận để hoàn tất đơn.
-                </p>
+                
               </div>
             </label>
           </div>

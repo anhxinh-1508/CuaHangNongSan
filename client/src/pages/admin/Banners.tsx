@@ -286,7 +286,7 @@ export default function AdminBanners() {
             ]}
             value={filterActive}
             onChange={(e) => setFilterActive(e.target.value as 'all' | 'yes' | 'no')}
-            containerStyle={{ marginBottom: 0, minWidth: 200 }}
+            containerStyle={{ marginBottom: 0, minWidth: 0, width: '100%' }}
           />
         </AdminListToolbar>
         <Table

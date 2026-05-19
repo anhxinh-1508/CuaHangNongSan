@@ -109,6 +109,7 @@ export default function AdminPagination({ page, pageSize, totalItems, onPageChan
         Dòng {from}–{to} trong {totalItems} · {pageSize} dòng/trang
       </p>
       <div
+        className="admin-pagination-nav"
         style={{
           display: 'inline-flex',
           flexWrap: 'wrap',

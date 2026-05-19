@@ -1,17 +1,288 @@
 /* Admin Responsive Styles */
 
-/* Table responsiveness */
-@media (max-width: 1200px) {
-  .admin-table-container {
-    overflow-x: auto;
+/*
+ * Flex overflow: vùng main phải có min-width:0 để bảng cuộn NGANG trong khung,
+ * không kéo rộng cả trang (lỗi phổ biến flex + table rộng).
+ */
+.admin-layout-root {
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+@media (min-width: 1025px) {
+  .sidebar-desktop {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    flex-shrink: 0 !important;
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
+}
+
+.admin-layout-main {
+  flex: 1 1 auto;
+  min-width: 0 !important;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+.admin-main-content {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.admin-page-shell {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.admin-page-shell > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.admin-card {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+  box-sizing: border-box;
+}
+
+.admin-card-body {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Page header */@media (max-width: 768px) {
+  .admin-page-header {
+    margin-bottom: 20px !important;
+    gap: 14px !important;
+  }
+
+  .admin-page-header-title {
+    font-size: 24px !important;
+  }
+
+  .admin-page-header-icon {
+    font-size: 28px !important;
+  }
+
+  .admin-page-header-actions {
+    width: 100%;
+  }
+
+  .admin-page-header-actions .btn-brand,
+  .admin-page-header-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-page-header-title {
+    font-size: 20px !important;
+  }
+}
+
+/* Bảng desktop */
+.admin-table-container {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Danh sách thẻ — mobile (<768px), cuộn dọc */
+.admin-mobile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.admin-mobile-card {
+  background: #fff;
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-mobile-card__media {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-mobile-card__media img {
+  display: block;
+  width: 72px;
+  height: 72px;
+  max-height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.admin-mobile-card__body {
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  align-items: start;
+}
+
+.admin-mobile-card__col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  align-items: flex-start;
+  align-self: start;
+  justify-content: flex-start;
+}
+
+.admin-mobile-card__row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+}
+
+.admin-mobile-card__label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-mobile-card__value {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.admin-mobile-card__actions {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-mobile-card__actions button {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .admin-card-body {
+    padding: 16px !important;
+  }
+
+  .admin-page-header-actions button {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Form trong modal — không tràn ngang */
+.admin-modal-form {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.admin-modal-form input,
+.admin-modal-form select,
+.admin-modal-form textarea {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-form-row > *,
+.admin-form-row-3 > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Modal responsiveness */
 @media (max-width: 768px) {
   .modal-content {
-    max-width: calc(100vw - 32px) !important;
-    margin: 16px;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 24px) !important;
+    border-radius: var(--radius-lg) !important;
+    overflow-x: hidden !important;
+  }
+
+  .modal-header {
+    padding: 16px 18px !important;
+  }
+
+  .modal-title {
+    font-size: 17px !important;
+    word-break: break-word;
+    padding-right: 8px;
+  }
+
+  .modal-body {
+    padding: 18px !important;
+    overflow-x: hidden !important;
+  }
+
+  .modal-footer {
+    padding: 14px 18px !important;
+    flex-direction: column-reverse !important;
+    align-items: stretch !important;
+  }
+
+  .modal-footer button {
+    width: 100% !important;
+    justify-content: center !important;
   }
 }
 
@@ -27,37 +298,88 @@
   .admin-grid-4 {
     grid-template-columns: 1fr !important;
   }
-  
-  /* Reduce padding on mobile */
+
   .admin-page-header {
     flex-direction: column;
     align-items: flex-start !important;
   }
-  
-  .admin-page-header h1 {
-    font-size: 24px !important;
+
+}
+
+/* List toolbar — filters full width on mobile */
+@media (max-width: 768px) {
+  .admin-list-toolbar > * {
+    flex: 1 1 100% !important;
+    min-width: 0 !important;
+    max-width: 100%;
   }
-  
-  .admin-card {
-    padding: 16px !important;
+
+  .admin-list-toolbar-count {
+    padding-bottom: 0 !important;
   }
 }
 
-/* Form responsiveness */
-@media (max-width: 640px) {
-  .admin-form-row {
+/* Form responsiveness (trang + modal) */
+@media (max-width: 768px) {
+  .admin-form-row,
+  .admin-form-row-3 {
     grid-template-columns: 1fr !important;
     gap: 0 !important;
   }
-  
+}
+
+@media (max-width: 640px) {
   .admin-button-group {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .admin-button-group button {
     width: 100%;
+    justify-content: center;
   }
+}
+
+/* Order detail modal */
+.admin-order-item-row {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  align-items: flex-start;
+}
+
+@media (max-width: 640px) {
+  .admin-order-item-row {
+    flex-wrap: wrap;
+  }
+
+  .admin-order-item-row > div:last-child {
+    width: 100%;
+    text-align: left !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .admin-order-summary-row {
+    gap: 16px !important;
+    justify-content: space-between !important;
+  }
+}
+
+/* Contact detail header */
+.admin-contact-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-contact-detail-header h3 {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Image grid in forms */
@@ -72,5 +394,15 @@
   .admin-table-actions {
     flex-direction: column;
     gap: 4px !important;
+  }
+}
+
+/* Pagination — smaller buttons on very small screens */
+@media (max-width: 400px) {
+  .admin-pagination-nav button,
+  .admin-pagination-nav span {
+    min-width: 36px !important;
+    height: 36px !important;
+    font-size: 13px !important;
   }
 }

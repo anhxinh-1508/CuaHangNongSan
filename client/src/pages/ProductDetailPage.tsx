@@ -17,7 +17,7 @@ export default function ProductDetailPage() {
   const [qty, setQty] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const { isMobile } = useResponsive()
+  const { isMobile, isTablet } = useResponsive()
   const [activeImage, setActiveImage] = useState(0)
 
   useEffect(() => {
@@ -97,11 +97,11 @@ export default function ProductDetailPage() {
     <div style={{ maxWidth: 1400, margin: '0 auto', padding: isMobile ? '20px 16px' : '32px 24px' }}>
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
-        gap: isMobile ? 32 : 56, 
+        gridTemplateColumns: (isMobile || isTablet) ? '1fr' : '1fr 1fr', 
+        gap: isMobile ? 24 : isTablet ? 32 : 56, 
         marginBottom: isMobile ? 40 : 64,
         background: '#fff',
-        padding: isMobile ? 24 : 40,
+        padding: isMobile ? 18 : isTablet ? 28 : 40,
         borderRadius: isMobile ? 16 : 20,
         border: '2px solid #e7e5e4',
         boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)'

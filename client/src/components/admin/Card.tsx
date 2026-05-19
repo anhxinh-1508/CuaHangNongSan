@@ -14,6 +14,11 @@ export default function Card({ children, title, actions, style = {}, noPadding =
     border: '2px solid var(--border-soft)',
     borderRadius: 'var(--radius-lg)',
     boxShadow: 'var(--shadow-sm)',
+    maxWidth: '100%',
+    minWidth: 0,
+    overflowX: 'clip',
+    overflowY: 'visible',
+    boxSizing: 'border-box',
     ...style
   }
 
@@ -27,10 +32,13 @@ export default function Card({ children, title, actions, style = {}, noPadding =
 
   const bodyStyle: CSSProperties = {
     padding: noPadding ? 0 : '24px',
+    maxWidth: '100%',
+    minWidth: 0,
+    boxSizing: 'border-box',
   }
 
   return (
-    <div style={cardStyle}>
+    <div className="admin-card" style={cardStyle}>
       {(title || actions) && (
         <div style={headerStyle}>
           {title && (
@@ -45,7 +53,7 @@ export default function Card({ children, title, actions, style = {}, noPadding =
           )}
         </div>
       )}
-      <div style={bodyStyle}>
+      <div className="admin-card-body" style={bodyStyle}>
         {children}
       </div>
     </div>

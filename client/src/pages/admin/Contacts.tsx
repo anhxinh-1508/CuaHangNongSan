@@ -241,7 +241,7 @@ export default function AdminContacts() {
             options={[{ value: '', label: 'Tất cả' }, ...CONTACT_STATUSES]}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            containerStyle={{ marginBottom: 0, minWidth: 200 }}
+            containerStyle={{ marginBottom: 0, minWidth: 0, width: '100%' }}
           />
         </AdminListToolbar>
         <Table
@@ -277,7 +277,7 @@ export default function AdminContacts() {
         {selectedContact && (
           <div>
             <div style={{ marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <div className="admin-contact-detail-header" style={{ marginBottom: 12 }}>
                 <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: 'var(--brand-green)' }}>
                   {selectedContact.subject}
                 </h3>

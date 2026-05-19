@@ -1,8 +1,10 @@
 import { FiFileText, FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
+import { useResponsive } from '../hooks/useResponsive'
 
 export default function Footer() {
+  const { isMobile } = useResponsive()
   return (
-    <footer className="footer-brand" style={{ padding: '64px 32px 24px', marginTop: 80 }}>
+    <footer className="footer-brand" style={{ padding: isMobile ? '40px 16px 20px' : '64px 32px 24px', marginTop: isMobile ? 48 : 80 }}>
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <div className="footer-grid" style={{ marginBottom: 48 }}>
           <div>

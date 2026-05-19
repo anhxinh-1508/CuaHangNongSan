@@ -15,11 +15,14 @@ export default function PageHeader({ title, subtitle, icon, actions }: PageHeade
     justifyContent: 'space-between',
     gap: 20,
     flexWrap: 'wrap',
+    maxWidth: '100%',
+    minWidth: 0,
+    boxSizing: 'border-box',
   }
 
   const leftStyle: CSSProperties = {
     flex: 1,
-    minWidth: 250,
+    minWidth: 0,
   }
 
   const titleStyle: CSSProperties = {
@@ -30,6 +33,7 @@ export default function PageHeader({ title, subtitle, icon, actions }: PageHeade
     alignItems: 'center',
     gap: 12,
     color: 'var(--brand-green)',
+    flexWrap: 'wrap',
   }
 
   const subtitleStyle: CSSProperties = {
@@ -39,16 +43,16 @@ export default function PageHeader({ title, subtitle, icon, actions }: PageHeade
   }
 
   return (
-    <div style={containerStyle}>
+    <div className="admin-page-header" style={containerStyle}>
       <div style={leftStyle}>
-        <h1 style={titleStyle}>
-          {icon && <span style={{ fontSize: 36, display: 'flex' }}>{icon}</span>}
+        <h1 className="admin-page-header-title" style={titleStyle}>
+          {icon && <span className="admin-page-header-icon" style={{ fontSize: 36, display: 'flex', flexShrink: 0 }}>{icon}</span>}
           {title}
         </h1>
         {subtitle && <p style={subtitleStyle}>{subtitle}</p>}
       </div>
       {actions && (
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div className="admin-page-header-actions" style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
           {actions}
         </div>
       )}

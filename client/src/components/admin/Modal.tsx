@@ -39,20 +39,28 @@ export default function Modal({ isOpen, onClose, title, children, footer, width 
     overflowY: 'auto'
   }
 
+  const maxW =
+    typeof width === 'number'
+      ? `min(${width}px, calc(100vw - 32px))`
+      : width
+
   const modalStyle: CSSProperties = {
     background: '#fff',
     borderRadius: 'var(--radius-xl)',
     boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
     width: '100%',
-    maxWidth: width,
-    maxHeight: 'calc(100vh - 64px)',
+    maxWidth: maxW,
+    maxHeight: 'calc(100vh - 32px)',
     display: 'flex',
     flexDirection: 'column',
-    margin: 'auto'
+    margin: 'auto',
+    minWidth: 0,
+    overflow: 'hidden',
+    boxSizing: 'border-box',
   }
 
   const headerStyle: CSSProperties = {
-    padding: '24px 28px',
+    padding: '20px 24px',
     borderBottom: '2px solid var(--border-soft)',
     display: 'flex',
     alignItems: 'center',
@@ -61,26 +69,32 @@ export default function Modal({ isOpen, onClose, title, children, footer, width 
   }
 
   const bodyStyle: CSSProperties = {
-    padding: '28px',
+    padding: '24px',
+    overflowX: 'hidden',
     overflowY: 'auto',
-    flex: 1
+    flex: 1,
+    minHeight: 0,
+    minWidth: 0,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
   }
 
   const footerStyle: CSSProperties = {
-    padding: '20px 28px',
+    padding: '16px 24px',
     borderTop: '2px solid var(--border-soft)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     gap: 12,
-    flexShrink: 0
+    flexShrink: 0,
+    flexWrap: 'wrap',
   }
 
   return (
     <div style={overlayStyle} onClick={onClose}>
-      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
-        <div style={headerStyle}>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: 'var(--brand-green)' }}>
+      <div className="modal-content" style={modalStyle} onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header" style={headerStyle}>
+          <h2 className="modal-title" style={{ margin: 0, fontSize: 20, fontWeight: 700, color: 'var(--brand-green)' }}>
             {title}
           </h2>
           <button
@@ -98,11 +112,11 @@ export default function Modal({ isOpen, onClose, title, children, footer, width 
             <FiX />
           </button>
         </div>
-        <div style={bodyStyle}>
+        <div className="modal-body" style={bodyStyle}>
           {children}
         </div>
         {footer && (
-          <div style={footerStyle}>
+          <div className="modal-footer admin-button-group" style={footerStyle}>
             {footer}
           </div>
         )}
