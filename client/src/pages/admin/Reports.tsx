@@ -371,15 +371,7 @@ export default function AdminReports() {
         }
       />
 
-      <Card
-        title="Bộ lọc thời gian"
-        style={{ marginBottom: 24 }}
-        actions={
-          <Button type="button" onClick={() => void fetchReports()} disabled={loading}>
-            {loading ? 'Đang tải…' : 'Làm mới'}
-          </Button>
-        }
-      >
+      <Card title="Bộ lọc thời gian" style={{ marginBottom: 24 }}>
         <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, cursor: 'pointer', fontWeight: 600 }}>
           <input
             type="checkbox"
