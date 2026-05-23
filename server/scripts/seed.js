@@ -13,6 +13,7 @@ const {
   InventoryTransaction,
 } = require("../src/models");
 const { deriveBatchStatus } = require("../src/services/inventory.service");
+const { parseExpiryDateVN } = require("../src/utils/vnDate");
 
 const categories = [
   { name: "Rau củ", slug: "rau" },
@@ -93,7 +94,7 @@ async function seed() {
   const batches = [];
   for (const p of createdProducts) {
     for (let n = 0; n < 2; n += 1) {
-      const expiryDate = days(4 + ((n + p.name.length) % 20));
+      const expiryDate = parseExpiryDateVN(days(4 + ((n + p.name.length) % 20)));
       const quantity = 20 + ((n + p.slug.length) % 35);
       batches.push({
         productId: p._id,

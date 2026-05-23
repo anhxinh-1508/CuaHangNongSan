@@ -1,7 +1,8 @@
 const AppError = require("../utils/appError");
 const asyncHandler = require("../utils/asyncHandler");
 const { ProductBatch, Order, Product } = require("../models");
-const { refreshBatchStatuses } = require("../services/inventory.service");
+const { refreshBatchStatuses, deriveBatchStatus } = require("../services/inventory.service");
+const { parseExpiryDateVN } = require("../utils/vnDate");
 
 async function batchHasOrders(batchId) {
   const count = await Order.countDocuments({
@@ -60,7 +61,12 @@ async function assertImportPriceLessThanSalePrice(productId, importPrice) {
 exports.createBatch = asyncHandler(async (req, res) => {
   await assertBatchCodeUnique(req.body.batchCode);
   await assertImportPriceLessThanSalePrice(req.body.productId, req.body.importPrice);
-  const data = await ProductBatch.create(req.body);
+  const payload = { ...req.body };
+  if (payload.expiryDate) {
+    payload.expiryDate = parseExpiryDateVN(payload.expiryDate);
+  }
+  payload.status = deriveBatchStatus(payload.expiryDate, payload.quantityInStock ?? 0);
+  const data = await ProductBatch.create(payload);
   res.status(201).json({ data });
 });
 
@@ -80,6 +86,10 @@ exports.updateBatch = asyncHandler(async (req, res) => {
       400
     );
   Object.assign(batch, req.body);
+  if (req.body.expiryDate !== undefined) {
+    batch.expiryDate = parseExpiryDateVN(req.body.expiryDate);
+  }
+  batch.status = deriveBatchStatus(batch.expiryDate, batch.quantityInStock);
   await batch.save();
   res.json({ data: batch });
 });

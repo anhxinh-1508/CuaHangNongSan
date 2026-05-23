@@ -155,7 +155,7 @@ exports.listProducts = asyncHandler(async (req, res) => {
   const batchColl = ProductBatch.collection.collectionName;
   const catColl = Category.collection.collectionName;
 
-  /** Stage tính tồn khả dụng từ lô còn hiệu lực. */
+  /** Tồn khả dụng: lô còn SL, chưa vô hiệu, HSD >= hôm nay (lịch Việt Nam — hết hạn sau 23:59 ngày HSD). */
   const stockLookupStage = {
     $lookup: {
       from: batchColl,
@@ -163,11 +163,31 @@ exports.listProducts = asyncHandler(async (req, res) => {
       pipeline: [
         {
           $match: {
-            $expr: { $eq: ["$productId", "$$pid"] },
-            status: { $in: ["Active", "NearExpiry"] },
-            isDisabled: { $ne: true },
-            expiryDate: { $gt: new Date() },
-            quantityInStock: { $gt: 0 },
+            $expr: {
+              $and: [
+                { $eq: ["$productId", "$$pid"] },
+                { $ne: ["$isDisabled", true] },
+                { $gt: ["$quantityInStock", 0] },
+                {
+                  $gte: [
+                    {
+                      $dateToString: {
+                        format: "%Y-%m-%d",
+                        date: "$expiryDate",
+                        timezone: "Asia/Ho_Chi_Minh",
+                      },
+                    },
+                    {
+                      $dateToString: {
+                        format: "%Y-%m-%d",
+                        date: "$$NOW",
+                        timezone: "Asia/Ho_Chi_Minh",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
           },
         },
         { $group: { _id: null, total: { $sum: "$quantityInStock" } } },
@@ -182,12 +202,7 @@ exports.listProducts = asyncHandler(async (req, res) => {
   };
   const filterInStockStage = { $match: { availableStock: { $gt: 0 } } };
 
-  const basePipeline = [
-    { $match: matchQ },
-    stockLookupStage,
-    addStockStage,
-    filterInStockStage,
-  ];
+  const basePipeline = [{ $match: matchQ }, stockLookupStage, addStockStage, filterInStockStage];
 
   /** Đếm sau khi đã lọc hết hàng. */
   const countResult = await Product.aggregate([...basePipeline, { $count: "total" }]);
@@ -278,7 +293,6 @@ async function assertProductNameUnique(name, excludeId) {
 exports.adminListProducts = asyncHandler(async (req, res) => {
   await refreshBatchStatuses();
   const batchColl = ProductBatch.collection.collectionName;
-  const now = new Date();
   const products = await Product.aggregate([
     { $sort: { createdAt: -1 } },
     {
@@ -288,11 +302,31 @@ exports.adminListProducts = asyncHandler(async (req, res) => {
         pipeline: [
           {
             $match: {
-              $expr: { $eq: ["$productId", "$$pid"] },
-              status: { $in: ["Active", "NearExpiry"] },
-              isDisabled: { $ne: true },
-              expiryDate: { $gt: now },
-              quantityInStock: { $gt: 0 },
+              $expr: {
+                $and: [
+                  { $eq: ["$productId", "$$pid"] },
+                  { $ne: ["$isDisabled", true] },
+                  { $gt: ["$quantityInStock", 0] },
+                  {
+                    $gte: [
+                      {
+                        $dateToString: {
+                          format: "%Y-%m-%d",
+                          date: "$expiryDate",
+                          timezone: "Asia/Ho_Chi_Minh",
+                        },
+                      },
+                      {
+                        $dateToString: {
+                          format: "%Y-%m-%d",
+                          date: "$$NOW",
+                          timezone: "Asia/Ho_Chi_Minh",
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
             },
           },
           { $group: { _id: null, total: { $sum: "$quantityInStock" } } },

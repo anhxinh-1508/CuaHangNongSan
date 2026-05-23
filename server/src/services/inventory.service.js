@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 const AppError = require("../utils/appError");
 const { Product, ProductBatch, InventoryTransaction } = require("../models");
+const { isExpiryStillValid, vnDaysUntilExpiry } = require("../utils/vnDate");
 
 function deriveBatchStatus(expiryDate, quantityInStock) {
-  const now = Date.now();
-  const expiry = new Date(expiryDate).getTime();
-  const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
   if (quantityInStock <= 0) return "OutOfStock";
-  if (daysLeft <= 0) return "Expired";
+  if (!isExpiryStillValid(expiryDate)) return "Expired";
+  const daysLeft = vnDaysUntilExpiry(expiryDate);
   if (daysLeft <= 3) return "NearExpiry";
   return "Active";
 }
@@ -41,16 +40,14 @@ async function sumAvailableStockForProductIds(productIds) {
   if (!ids.length) return new Map();
   const batches = await ProductBatch.find({
     productId: { $in: ids },
-    status: { $in: ["Active", "NearExpiry"] },
     isDisabled: { $ne: true },
-    expiryDate: { $gt: new Date() },
     quantityInStock: { $gt: 0 },
   })
-    .select("productId quantityInStock")
+    .select("productId quantityInStock expiryDate status isDisabled")
     .lean();
-
   const map = new Map();
   for (const b of batches) {
+    if (!isExpiryStillValid(b.expiryDate)) continue;
     const key = b.productId.toString();
     map.set(key, (map.get(key) || 0) + b.quantityInStock);
   }
@@ -61,12 +58,14 @@ async function sumAvailableStockForProductIds(productIds) {
 async function getAvailableStock(productId) {
   const batches = await ProductBatch.find({
     productId,
-    status: { $in: ["Active", "NearExpiry"] },
     isDisabled: { $ne: true },
-    expiryDate: { $gt: new Date() },
     quantityInStock: { $gt: 0 },
-  }).sort({ expiryDate: 1 });
-  return batches.reduce((sum, b) => sum + b.quantityInStock, 0);
+  })
+    .sort({ expiryDate: 1 })
+    .lean();
+  return batches
+    .filter((b) => isExpiryStillValid(b.expiryDate))
+    .reduce((sum, b) => sum + b.quantityInStock, 0);
 }
 
 async function allocateByFefo(items, actorUserId, session) {
@@ -79,15 +78,14 @@ async function allocateByFefo(items, actorUserId, session) {
     if (!product || !product.isActive) {
       throw new AppError("PRODUCT_INVALID", "Sản phẩm không khả dụng", 400, [{ field: "productId", reason: "Sản phẩm không hợp lệ" }]);
     }
-    const batches = await ProductBatch.find({
+    const batchRows = await ProductBatch.find({
       productId: product._id,
-      status: { $in: ["Active", "NearExpiry"] },
       isDisabled: { $ne: true },
-      expiryDate: { $gt: new Date() },
       quantityInStock: { $gt: 0 },
     })
       .sort({ expiryDate: 1 })
       .session(session);
+    const batches = batchRows.filter((b) => isExpiryStillValid(b.expiryDate));
 
     let remaining = item.quantity;
     for (const batch of batches) {
