@@ -24,9 +24,9 @@ import VietnamAddressFields, {
 
 const CHECKOUT_LINES_KEY = 'ff_checkout_lines_v1'
 
-/** Ảnh mẫu VietQR / chuyển khoản — hiển thị trong popup thanh toán QR giả lập */
+/** Ảnh VietQR / chuyển khoản — popup thanh toán QR (Cloudinary Asset) */
 const VIETQR_DEMO_IMAGE_URL =
-  'https://res.cloudinary.com/dpigoorhc/image/upload/v1778614972/01bab283-c777-447a-b45f-7404918ded8e.png'
+  'https://res.cloudinary.com/dpigoorhc/image/upload/v1779522884/c8c95170-4d1c-4a6f-aa15-a76993dfe4df.png'
 
 const FREE_SHIPPING_SUBTOTAL_MIN = 300_000
 const SHIPPING_FEE = 20_000
