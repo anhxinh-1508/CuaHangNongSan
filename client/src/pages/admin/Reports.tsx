@@ -362,7 +362,7 @@ export default function AdminReports() {
     <div>
       <PageHeader
         title="Báo cáo & thống kê"
-        subtitle="Doanh thu, vốn, tiền lãi ước lượng và tình hình tồn kho — trình bày gọn cho đồ án"
+        subtitle="Doanh thu, vốn, tiền lãi ước lượng và tình hình tồn kho"
         icon={<FiPieChart />}
         actions={
           <Link to="/admin" style={{ fontWeight: 600, color: 'var(--brand-green)', textDecoration: 'none' }}>
