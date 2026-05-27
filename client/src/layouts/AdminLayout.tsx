@@ -17,6 +17,7 @@ import {
   FiLogOut,
   FiPieChart
 } from 'react-icons/fi'
+import NotificationBell from '../components/NotificationBell'
 
 export default function AdminLayout() {
   const { user, isAdmin, authReady, logout } = useAuth()
@@ -369,7 +370,19 @@ export default function AdminLayout() {
           <div style={{ fontWeight: 700, fontSize: 18, color: 'var(--brand-green)' }}>
             Admin Panel
           </div>
-          <div style={{ width: 32 }}></div>
+          <NotificationBell variant="admin" />
+        </div>
+
+        <div
+          className="admin-notifications-bar"
+          style={{
+            display: 'none',
+            justifyContent: 'flex-end',
+            padding: '12px 24px 0',
+            background: '#fafaf9',
+          }}
+        >
+          <NotificationBell variant="admin" />
         </div>
 
         <div className="admin-main-content" style={{ padding: '32px 24px', background: '#fafaf9', boxSizing: 'border-box' }}>
@@ -400,6 +413,9 @@ export default function AdminLayout() {
         @media (min-width: 1025px) {
           .sidebar-mobile {
             display: none !important;
+          }
+          .admin-notifications-bar {
+            display: flex !important;
           }
         }
         @media (max-width: 480px) {
