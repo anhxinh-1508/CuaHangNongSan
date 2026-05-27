@@ -6,6 +6,7 @@ import { useWishlist } from '../features/wishlist/context/WishlistContext'
 import api from '../api/client'
 import { unwrapData } from '../api/mappers'
 import { CART_UPDATED_EVENT } from '../utils/cartEvents'
+import NotificationBell from './NotificationBell'
 
 function CartIconWithBadge({ count }: { count: number }) {
   return (
@@ -266,7 +267,9 @@ export default function Header() {
                     <CartIconWithBadge count={cartCount} />
                     Giỏ hàng
                   </Link>
-                  <div ref={userMenuRef} style={{ position: 'relative' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <NotificationBell variant="storefront" />
+                    <div ref={userMenuRef} style={{ position: 'relative' }}>
                     <button
                       onClick={() => setUserMenuOpen((v) => !v)}
                       style={{
@@ -368,6 +371,7 @@ export default function Header() {
                         </button>
                       </div>
                     )}
+                    </div>
                   </div>
                 </>
               ) : (
@@ -444,6 +448,21 @@ export default function Header() {
                   Giỏ hàng
                 </Link>
                 <Link to="/orders" onClick={() => setMenuOpen(false)} style={{ color: '#3D5C30', fontWeight: 700, fontSize: 16, textDecoration: 'none', padding: '8px 0', display: 'flex', alignItems: 'center', gap: 8 }}><FiPackage /> Đơn hàng của tôi</Link>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '8px 0',
+                    borderTop: '1px solid #e7e5e4',
+                    marginTop: 4,
+                  }}
+                >
+                  <span style={{ color: '#3D5C30', fontWeight: 700, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <FiUser /> Xin chào, {greetingName}
+                  </span>
+                  <NotificationBell variant="storefront" />
+                </div>
                 <Link to="/account" onClick={() => setMenuOpen(false)} style={{ color: '#E3A127', fontWeight: 700, fontSize: 16, textDecoration: 'none', padding: '8px 0', display: 'flex', alignItems: 'center', gap: 8 }}><FiUser /> Quản lý tài khoản</Link>
                 {user.role === 'Admin' && (
                   <Link to="/admin" onClick={() => setMenuOpen(false)} style={{ color: '#E3A127', fontWeight: 700, fontSize: 16, textDecoration: 'none', padding: '8px 0', display: 'flex', alignItems: 'center', gap: 8 }}><FiSettings /> Admin</Link>

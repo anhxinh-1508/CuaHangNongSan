@@ -8,6 +8,7 @@ import './styles/layout.css'
 import './styles/components.css'
 import './styles/responsive.css'
 import './styles/admin.css'
+import './styles/notifications.css'
 
 const queryClient = new QueryClient()
 
