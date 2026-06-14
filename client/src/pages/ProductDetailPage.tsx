@@ -260,19 +260,33 @@ export default function ProductDetailPage() {
           </h1>
           
           <div style={{ 
-            display: 'inline-block',
+            display: 'inline-flex',
+            alignItems: 'baseline',
+            flexWrap: 'wrap',
+            gap: 8,
             padding: isMobile ? '10px 20px' : '12px 24px', 
             background: 'linear-gradient(135deg, #E2A227 0%, #f0b844 100%)', 
             color: '#fff',
             borderRadius: 12,
-            marginBottom: 24,
-            fontSize: isMobile ? 24 : 32,
-            fontWeight: 700,
+            marginBottom: product.unit ? 12 : 24,
             boxShadow: '0 4px 12px rgba(226, 162, 39, 0.3)',
             width: 'fit-content'
           }}>
-            {product.price?.toLocaleString()}đ
+            <span style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700 }}>
+              {product.price?.toLocaleString()}đ
+            </span>
+            {product.unit ? (
+              <span style={{ fontSize: isMobile ? 16 : 18, fontWeight: 600, opacity: 0.95 }}>
+                / {product.unit}
+              </span>
+            ) : null}
           </div>
+
+          {product.unit ? (
+            <p style={{ margin: '0 0 24px', fontSize: 15, color: '#525252' }}>
+              <strong style={{ color: '#3C5C2D' }}>Đơn vị tính:</strong> {product.unit}
+            </p>
+          ) : null}
           
           {useTags.length > 0 && (
             <div style={{ display: 'flex', gap: 10, marginBottom: 24, flexWrap: 'wrap' }}>
@@ -321,12 +335,19 @@ export default function ProductDetailPage() {
             <span style={{ fontSize: 24, display: 'flex' }}><FiBox /></span>
             <div>
               <p style={{ margin: 0, fontSize: 14, color: '#737373' }}>Tồn kho</p>
-              <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#3C5C2D' }}>{stock} sản phẩm</p>
+              <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#3C5C2D' }}>
+                {stock} {product.unit || 'sản phẩm'}
+              </p>
             </div>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              {product.unit ? (
+                <span style={{ fontSize: 14, color: '#737373', fontWeight: 600, width: '100%', marginBottom: 2 }}>
+                  Số lượng ({product.unit})
+                </span>
+              ) : null}
               <button
                 type="button"
                 onClick={() => setQty(Math.max(1, qty - 1))}
@@ -476,6 +497,9 @@ export default function ProductDetailPage() {
                     <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 600 }}>{p.name}</h3>
                     <p style={{ margin: 0, fontWeight: 700, color: '#E2A227', fontSize: 18 }}>
                       {p.price?.toLocaleString()}đ
+                      {p.unit ? (
+                        <span style={{ fontSize: 13, color: '#737373', fontWeight: 500 }}> / {p.unit}</span>
+                      ) : null}
                     </p>
                   </div>
                 </div>

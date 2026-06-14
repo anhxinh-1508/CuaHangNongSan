@@ -20,6 +20,7 @@ export type UiProduct = {
   imageUrls?: string[]
   stock?: number
   useTags?: string[]
+  unit?: string
 }
 
 export type UiCategory = {
@@ -309,6 +310,7 @@ export const mapProduct = (raw: any): UiProduct => {
     imageUrls,
     stock: raw?.availableStock ?? raw?.stock ?? 0,
     useTags: raw?.certifications ?? [],
+    unit: raw?.unit ?? '',
   }
 }
 

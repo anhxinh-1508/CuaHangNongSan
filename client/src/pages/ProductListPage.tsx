@@ -267,10 +267,17 @@ export default function ProductListPage() {
               <Link to={`/products/${p.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                 <div style={{ padding: 16 }}>
                   <h3 style={{ margin: '0 0 10px', fontSize: 17, fontWeight: 600, color: '#1a1a1a' }}>{p.name}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <p style={{ margin: 0, fontWeight: 700, color: '#E2A227', fontSize: 19 }}>
-                      {p.price?.toLocaleString()}đ
-                    </p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 4, minWidth: 0 }}>
+                      <p style={{ margin: 0, fontWeight: 700, color: '#E2A227', fontSize: 19 }}>
+                        {p.price?.toLocaleString()}đ
+                      </p>
+                      {p.unit ? (
+                        <span style={{ fontSize: 13, color: '#737373', fontWeight: 500 }}>
+                          / {p.unit}
+                        </span>
+                      ) : null}
+                    </div>
                     <div style={{ 
                       background: '#3C5C2D',
                       color: '#fff',
