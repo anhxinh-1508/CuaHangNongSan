@@ -266,7 +266,14 @@ export default function ProductListPage() {
               </div>
               <Link to={`/products/${p.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                 <div style={{ padding: 16 }}>
-                  <h3 style={{ margin: '0 0 10px', fontSize: 17, fontWeight: 600, color: '#1a1a1a' }}>{p.name}</h3>
+                  <h3 style={{ margin: '0 0 6px', fontSize: 17, fontWeight: 600, color: '#1a1a1a' }}>{p.name}</h3>
+                  {p.supplier ? (
+                    <p style={{ margin: '0 0 10px', fontSize: 13, color: '#737373', lineHeight: 1.4 }}>
+                      Nhà cung cấp: {p.supplier}
+                    </p>
+                  ) : (
+                    <div style={{ marginBottom: 10 }} />
+                  )}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                     <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 4, minWidth: 0 }}>
                       <p style={{ margin: 0, fontWeight: 700, color: '#E2A227', fontSize: 19 }}>

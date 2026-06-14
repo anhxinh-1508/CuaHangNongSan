@@ -268,7 +268,7 @@ export default function ProductDetailPage() {
             background: 'linear-gradient(135deg, #E2A227 0%, #f0b844 100%)', 
             color: '#fff',
             borderRadius: 12,
-            marginBottom: product.unit ? 12 : 24,
+            marginBottom: product.unit || product.supplier ? 12 : 24,
             boxShadow: '0 4px 12px rgba(226, 162, 39, 0.3)',
             width: 'fit-content'
           }}>
@@ -282,10 +282,19 @@ export default function ProductDetailPage() {
             ) : null}
           </div>
 
-          {product.unit ? (
-            <p style={{ margin: '0 0 24px', fontSize: 15, color: '#525252' }}>
-              <strong style={{ color: '#3C5C2D' }}>Đơn vị tính:</strong> {product.unit}
-            </p>
+          {product.unit || product.supplier ? (
+            <div style={{ margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {product.supplier ? (
+                <p style={{ margin: 0, fontSize: 15, color: '#525252' }}>
+                  <strong style={{ color: '#3C5C2D' }}>Nhà cung cấp:</strong> {product.supplier}
+                </p>
+              ) : null}
+              {product.unit ? (
+                <p style={{ margin: 0, fontSize: 15, color: '#525252' }}>
+                  <strong style={{ color: '#3C5C2D' }}>Đơn vị tính:</strong> {product.unit}
+                </p>
+              ) : null}
+            </div>
           ) : null}
           
           {useTags.length > 0 && (
@@ -494,7 +503,12 @@ export default function ProductDetailPage() {
                     )}
                   </div>
                   <div style={{ padding: 16 }}>
-                    <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 600 }}>{p.name}</h3>
+                    <h3 style={{ margin: '0 0 6px', fontSize: 16, fontWeight: 600 }}>{p.name}</h3>
+                    {p.supplier ? (
+                      <p style={{ margin: '0 0 8px', fontSize: 12, color: '#737373', lineHeight: 1.4 }}>
+                        {p.supplier}
+                      </p>
+                    ) : null}
                     <p style={{ margin: 0, fontWeight: 700, color: '#E2A227', fontSize: 18 }}>
                       {p.price?.toLocaleString()}đ
                       {p.unit ? (
